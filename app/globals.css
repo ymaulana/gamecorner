@@ -8,7 +8,7 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: white) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
@@ -30,4 +30,36 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+.btn {
+  @apply bg-dark rounded-md px-4 py-2 font-semibold text-slate-200 transition hover:scale-105;
+}
+
+h1 {
+  @apply text-2xl font-bold;
+}
+
+h2 {
+  @apply my-4 text-2xl font-bold;
+}
+
+p.content {
+  @apply leading-loose;
+}
+
+.link {
+  @apply max-w-full overflow-hidden text-ellipsis font-bold text-[#7563DF];
+}
+
+.primary-btn {
+  @apply rounded-md bg-slate-800 px-4 py-2 text-white;
+}
+
+input,
+textarea {
+  @apply rounded-md border border-slate-300 px-4 py-2;
+}
+
+textarea {
+  @apply h-36;
 }
