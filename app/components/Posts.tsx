@@ -1,20 +1,25 @@
+import { getServerSession } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import DeleteButton from "./DeleteButton";
 
 interface PostProps {
   id: string;
   datepublished: string;
   thumbnail?: string;
-  author?: string;
+  author: string;
+  authorEmail?: string;
   title: string;
   links?: string[];
   category?: string;
   content?: string;
 }
 
-export default function Posts({
+export default async function Posts({
   id,
   author,
+  authorEmail,
   datepublished,
   thumbnail,
   title,
@@ -22,18 +27,33 @@ export default function Posts({
   category,
   content,
 }: PostProps) {
+  const session = await getServerSession(authOptions);
+
+  const isEditable = session && session?.user?.email === authorEmail;
+
+  const options: Intl.DateTimeFormatOptions = {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  };
+
+  const formattedDate = (date: string) => {
+    const dateFormat = new Date(date);
+    return dateFormat.toLocaleDateString("en-US", options);
+  };
+
   return (
     <div className="my-4 border-b border-b-slate-400 py-6">
       <div className="mb-4">
         {author ? (
           <>
             Posted by: <span className="font-bold">{author}</span> on{" "}
-            {datepublished}
+            {formattedDate(datepublished)}
           </>
         ) : (
           <>
             Posted by: <span className="font-bold">Anonym</span> on{" "}
-            {datepublished}
+            {formattedDate(datepublished)}
           </>
         )}
       </div>
@@ -96,12 +116,12 @@ export default function Posts({
         </div>
       )}
 
-      {/* {isEditable && (
-    <div className="flex gap-3 font-bold py-2 px-4 rounded-md bg-slate-200 w-fit">
-      <Link href={`/edit-post/${id}`}>Edit</Link>
-      <DeleteButton id={id} />
-    </div>
-  )} */}
+      {isEditable && (
+        <div className="flex w-fit gap-10 rounded-md bg-slate-200 px-4 py-2 font-bold">
+          <Link href={`/`}>Edit</Link>
+          <DeleteButton id={id} />
+        </div>
+      )}
     </div>
   );
 }

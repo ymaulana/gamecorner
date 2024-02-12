@@ -1,18 +1,20 @@
 import prisma from "@/lib/prismadb";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function POST(req: Request) {
-  // const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
 
-  // if (!session) {
-  //   return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-  // }
+  if (!session) {
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
 
   const { title, content, links, selectedCategory, imageUrl, publicId } =
     await req.json();
 
-  // const authorEmail = session?.user?.email as string;
-  const authorEmail = "yusufnetral@gmail.com";
+  const authorEmail = session?.user?.email as string;
+  // const authorEmail = "yusufnetral@gmail.com";
 
   if (!title || !content) {
     return NextResponse.json(
