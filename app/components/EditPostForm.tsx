@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { ICategory } from "../types";
+import { ICategory, IPost } from "../types";
 
-export default function CreatePostForm() {
+export default function EditPostForm({ post }: { post: IPost }) {
   const [links, setLinks] = useState<string[]>([]);
   const [linkInput, setLinkInput] = useState("");
   const [title, setTitle] = useState("");
@@ -19,12 +19,30 @@ export default function CreatePostForm() {
 
   useEffect(() => {
     const fetchAllCategories = async () => {
-      const res = await fetch("api/categories");
+      const res = await fetch("/api/categories");
       const catNames = await res.json();
       setCategories(catNames);
     };
     fetchAllCategories();
-  }, []);
+
+    const initValues = () => {
+      setTitle(post.title);
+      setContent(post.content);
+      setImageUrl(post.imageUrl || "");
+      // setPublicId(post.publicId || "");
+      setSelectedCategory(post.catName || "");
+      setLinks(post.links || []);
+    };
+
+    initValues();
+  }, [
+    post.title,
+    post.content,
+    post.imageUrl,
+    // post.publicId,
+    post.catName,
+    post.links,
+  ]);
 
   const addLink = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -49,8 +67,8 @@ export default function CreatePostForm() {
     }
 
     try {
-      const res = await fetch("api/posts/", {
-        method: "POST",
+      const res = await fetch(`/api/posts/${post.id}`, {
+        method: "PUT",
         headers: {
           "Content-type": "application/json",
         },
@@ -60,12 +78,12 @@ export default function CreatePostForm() {
           links,
           selectedCategory,
           imageUrl,
-          publicId,
+          // publicId,
         }),
       });
 
       if (res.ok) {
-        alert("Post created successfully");
+        alert("Post updated successfully");
         router.push("/dashboard");
       }
     } catch (error) {
@@ -75,7 +93,7 @@ export default function CreatePostForm() {
 
   return (
     <div>
-      <h2>Create Post</h2>
+      <h2>Update Post</h2>
       <p className="mb-4 text-sm text-red-600">
         * input fields with marked are required
       </p>
@@ -186,7 +204,7 @@ export default function CreatePostForm() {
         </select>
 
         <button className="primary-btn" type="submit">
-          Create Post
+          Update Post
         </button>
       </form>
     </div>

@@ -11,7 +11,6 @@ const getPosts = async (): Promise<IPost[] | null> => {
       const posts = await res.json();
       return posts;
     }
-    console.log(res);
   } catch (error) {
     console.log(error);
   }

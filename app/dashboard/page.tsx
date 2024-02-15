@@ -38,7 +38,7 @@ export default async function page() {
           <Posts
             key={post.id}
             id={post.id}
-            author={session.user?.name as string}
+            author={""}
             authorEmail={post.authorEmail}
             datepublished={post.createdAt}
             thumbnail={post.imageUrl}

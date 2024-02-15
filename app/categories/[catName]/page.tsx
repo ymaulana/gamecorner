@@ -14,7 +14,6 @@ const getPosts = async (catName: string): Promise<IPost[] | null> => {
       const posts = categories.posts;
       return posts;
     }
-    console.log(res);
   } catch (error) {
     console.log(error);
   }

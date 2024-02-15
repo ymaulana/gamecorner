@@ -51,10 +51,7 @@ export default async function Posts({
             {formattedDate(datepublished)}
           </>
         ) : (
-          <>
-            Posted by: <span className="font-bold">Anonym</span> on{" "}
-            {formattedDate(datepublished)}
-          </>
+          <>Posted on {formattedDate(datepublished)}</>
         )}
       </div>
 
@@ -118,7 +115,7 @@ export default async function Posts({
 
       {isEditable && (
         <div className="flex w-fit gap-10 rounded-md bg-slate-200 px-4 py-2 font-bold">
-          <Link href={`/`}>Edit</Link>
+          <Link href={`/edit-post/${id}`}>Edit</Link>
           <DeleteButton id={id} />
         </div>
       )}

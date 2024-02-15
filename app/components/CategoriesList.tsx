@@ -10,7 +10,6 @@ const getCategories = async (): Promise<ICategory[] | null> => {
       const categories = await res.json();
       return categories;
     }
-    console.log(res);
   } catch (error) {
     console.log(error);
   }
