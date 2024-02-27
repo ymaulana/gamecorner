@@ -28,7 +28,7 @@ export default async function page() {
   if (email) {
     posts = await getPosts(email);
   }
-  console.log(session);
+
   return (
     <div>
       <h1>My Posts</h1>

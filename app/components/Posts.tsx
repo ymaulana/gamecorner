@@ -61,6 +61,7 @@ export default async function Posts({
             src={thumbnail}
             alt={title}
             fill
+            priority
             className="rounded-md object-cover object-center"
           />
         ) : (
@@ -68,6 +69,7 @@ export default async function Posts({
             src={"/thumbnail-placeholder.png"}
             alt={title}
             fill
+            priority
             className="rounded-md object-cover object-center"
           />
         )}

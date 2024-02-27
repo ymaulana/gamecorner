@@ -5,6 +5,7 @@ const nextConfig = {
       "i.kinja-img.com",
       "lh3.googleusercontent.com",
       "avatars.githubusercontent.com",
+      "res.cloudinary.com",
     ],
   },
 };

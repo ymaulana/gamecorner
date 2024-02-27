@@ -1,5 +1,7 @@
 "use client";
 
+import { CldUploadButton, CldUploadWidgetResults } from "next-cloudinary";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -29,7 +31,7 @@ export default function EditPostForm({ post }: { post: IPost }) {
       setTitle(post.title);
       setContent(post.content);
       setImageUrl(post.imageUrl || "");
-      // setPublicId(post.publicId || "");
+      setPublicId(post.publicId || "");
       setSelectedCategory(post.catName || "");
       setLinks(post.links || []);
     };
@@ -39,7 +41,7 @@ export default function EditPostForm({ post }: { post: IPost }) {
     post.title,
     post.content,
     post.imageUrl,
-    // post.publicId,
+    post.publicId,
     post.catName,
     post.links,
   ]);
@@ -53,8 +55,37 @@ export default function EditPostForm({ post }: { post: IPost }) {
   };
 
   const deleteLink = (index: number) => {
-    console.log(index);
     setLinks((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleImageUpload = (result: CldUploadWidgetResults) => {
+    const info = result.info as object;
+
+    if ("secure_url" in info && "public_id" in info) {
+      const url = info.secure_url as string;
+      const public_id = info.public_id as string;
+      setImageUrl(url);
+      setPublicId(public_id);
+    }
+  };
+
+  const removeImage = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch("/api/removeImage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ publicId }),
+      });
+
+      if (res.ok) {
+        setImageUrl("");
+        setPublicId("");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -78,13 +109,14 @@ export default function EditPostForm({ post }: { post: IPost }) {
           links,
           selectedCategory,
           imageUrl,
-          // publicId,
+          publicId,
         }),
       });
 
       if (res.ok) {
         alert("Post updated successfully");
         router.push("/dashboard");
+        router.refresh();
       }
     } catch (error) {
       console.log(error);
@@ -185,6 +217,51 @@ export default function EditPostForm({ post }: { post: IPost }) {
             Add
           </button>
         </div>
+
+        <CldUploadButton
+          className={`relative mt-4 grid h-48 place-items-center rounded-md border-2 border-dotted bg-slate-100 ${
+            imageUrl && "pointer-events-none"
+          }`}
+          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+          onUpload={handleImageUpload}
+        >
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="h-6 w-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+              />
+            </svg>
+          </div>
+
+          {imageUrl && (
+            <Image
+              src={imageUrl}
+              fill
+              priority
+              className="absolute inset-0 object-cover"
+              alt={title}
+            />
+          )}
+        </CldUploadButton>
+
+        {publicId && (
+          <button
+            onClick={removeImage}
+            className="mb-4 w-fit rounded-md bg-red-600 px-4 py-2 font-bold text-white"
+          >
+            Remove Image
+          </button>
+        )}
+
         <select
           onChange={(e) => setSelectedCategory(e.target.value)}
           className="appearance-none rounded-md border p-3"

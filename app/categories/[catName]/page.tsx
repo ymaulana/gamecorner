@@ -1,3 +1,4 @@
+import CategoriesList from "@/app/components/CategoriesList";
 import Posts from "@/app/components/Posts";
 import { IPost } from "@/app/types";
 
@@ -31,6 +32,7 @@ export default async function Home({
 
   return (
     <>
+      <CategoriesList />
       <h1>
         <span className="font-normal">Category: </span>{" "}
         {decodeURIComponent(category)}
