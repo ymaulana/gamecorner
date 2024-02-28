@@ -10,7 +10,7 @@ export async function GET(
   try {
     const id = params.id;
     const post = await prisma.post.findUnique({ where: { id } });
-    console.log("id", id);
+
     return NextResponse.json(post);
   } catch (error) {
     console.log(error);

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { ICategory, IPost } from "../types";
 
 export default function EditPostForm({ post }: { post: IPost }) {
@@ -92,8 +93,7 @@ export default function EditPostForm({ post }: { post: IPost }) {
     e.preventDefault();
 
     if (!title || !content) {
-      const errorMessage = "Title and Content are required";
-      alert(errorMessage);
+      toast.error("Title and Content are required");
       return;
     }
 
@@ -114,7 +114,7 @@ export default function EditPostForm({ post }: { post: IPost }) {
       });
 
       if (res.ok) {
-        alert("Post updated successfully");
+        toast.success("Post updated successfully");
         router.push("/dashboard");
         router.refresh();
       }

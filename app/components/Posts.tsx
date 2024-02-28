@@ -61,6 +61,7 @@ export default async function Posts({
             src={thumbnail}
             alt={title}
             fill
+            sizes="100vw"
             priority
             className="rounded-md object-cover object-center"
           />

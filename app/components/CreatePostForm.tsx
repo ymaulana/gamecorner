@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { ICategory } from "../types";
 
 export default function CreatePostForm() {
@@ -37,7 +38,6 @@ export default function CreatePostForm() {
   };
 
   const deleteLink = (index: number) => {
-    console.log(index);
     setLinks((prev) => prev.filter((_, i) => i !== index));
   };
 
@@ -50,7 +50,6 @@ export default function CreatePostForm() {
       setImageUrl(url);
       setPublicId(public_id);
     }
-    // console.log(info);
   };
 
   const removeImage = async (e: React.FormEvent) => {
@@ -76,8 +75,7 @@ export default function CreatePostForm() {
     e.preventDefault();
 
     if (!title || !content) {
-      const errorMessage = "Title and Content are required";
-      alert(errorMessage);
+      toast.error("Title and Content are required");
       return;
     }
 
@@ -98,9 +96,11 @@ export default function CreatePostForm() {
       });
 
       if (res.ok) {
-        alert("Post created successfully");
+        toast.success("Post created successfully");
         router.push("/dashboard");
         router.refresh();
+      } else {
+        toast.error("Something went wrong.");
       }
     } catch (error) {
       console.log(error);

@@ -14,7 +14,6 @@ export async function POST(req: Request) {
     await req.json();
 
   const authorEmail = session?.user?.email as string;
-  // const authorEmail = "yusufnetral@gmail.com";
 
   if (!title || !content) {
     return NextResponse.json(
