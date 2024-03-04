@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { authOptions } from "../../api/auth/[...nextauth]/route";
+
+import authOptions from "@/app/api/auth/[...nextauth]/authOptions";
 import EditPostForm from "../../components/EditPostForm";
 import { IPost } from "../../types";
 

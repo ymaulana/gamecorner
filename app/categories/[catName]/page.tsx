@@ -22,7 +22,7 @@ const getPosts = async (catName: string): Promise<IPost[] | null> => {
   return null;
 };
 
-export default async function Home({
+export default async function CategoryPosts({
   params,
 }: {
   params: { catName: string };

@@ -1,7 +1,8 @@
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+
+import authOptions from "../api/auth/[...nextauth]/authOptions";
 import Posts from "../components/Posts";
 import { IPost } from "../types";
 
@@ -16,7 +17,7 @@ const getPosts = async (email: string) => {
   }
 };
 
-export default async function page() {
+export default async function Dashboard() {
   const session = await getServerSession(authOptions);
   const email = session?.user?.email;
   let posts = [];
