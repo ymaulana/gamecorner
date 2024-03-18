@@ -43,6 +43,12 @@ export default async function Posts({
     return dateFormat.toLocaleDateString("en-US", options);
   };
 
+  // truncate the content, limited to only 600 characters
+  const truncatedContent = content && content.slice(0, 600);
+
+  // truncate the content, limited to only 1 paragraph or before the new line
+  // const truncatedContent = content?.split("\n")[0];
+
   return (
     <div className="my-4 border-b border-b-slate-400 py-6">
       <div className="mb-4">
@@ -87,7 +93,20 @@ export default async function Posts({
       )}
 
       <h2>{title}</h2>
-      <p className="content">{content}</p>
+
+      {/* <div className="content">
+        {content
+          ?.split("\n")
+          .map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+      </div> */}
+
+      <div className="content">
+        <p>
+          {truncatedContent && truncatedContent.length < content.length
+            ? truncatedContent + "..."
+            : content}
+        </p>
+      </div>
 
       {links && (
         <div className="my-4 flex flex-col gap-3">
