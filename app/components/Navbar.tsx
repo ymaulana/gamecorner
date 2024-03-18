@@ -31,11 +31,11 @@ export default function Navbar() {
     <div className="relative mb-4 flex justify-between border-b pb-4 shadow-[0_4px_6px_-6px_#222]">
       <div>
         <Link href={"/"}>
-          <h1 className="text-4xl font-bold tracking-tighter text-dark">
+          <h1 className="text-2xl font-bold tracking-tighter text-dark min-[480px]:text-4xl">
             Games Corner
           </h1>
         </Link>
-        <p className="text-sm text-slate-700">
+        <p className="text-[12px] text-slate-700 min-[480px]:text-sm">
           Gaming Reviews, News, Tips and More.
         </p>
       </div>
@@ -102,8 +102,11 @@ export default function Navbar() {
           </div>
         </>
       ) : (
-        <div className="flex items-center">
-          <Link className="btn" href={"/sign-in"}>
+        <div className="flex items-center text-center">
+          <Link
+            className="btn text-[12px] min-[480px]:text-base"
+            href={"/sign-in"}
+          >
             Sign In
           </Link>
         </div>

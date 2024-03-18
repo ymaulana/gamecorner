@@ -18,10 +18,18 @@ const getCategories = async (): Promise<ICategory[] | null> => {
 
 export default async function CategoriesList() {
   const categories = await getCategories();
+
+  const categoriesOrder = ["news", "reviews", "guides", "fixes", "gears"];
+
+  const sortedCategories = categories?.sort((a, b) => {
+    return (
+      categoriesOrder.indexOf(a.catName) - categoriesOrder.indexOf(b.catName)
+    );
+  });
   return (
     <div className="flex items-center justify-center gap-2">
       {categories &&
-        categories.map((category) => (
+        sortedCategories?.map((category) => (
           <Link
             key={category.id}
             href={`/categories/${category.catName}`}
