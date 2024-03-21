@@ -1,62 +1,34 @@
+import { formattedDate } from "@/utils";
 import { getServerSession } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
-
-import { formattedDate } from "@/utils";
 import authOptions from "../api/auth/[...nextauth]/authOptions";
+import { IPost } from "../types";
 import DeleteButton from "./DeleteButton";
 
-interface PostProps {
-  id: string;
-  datepublished: string;
-  thumbnail?: string;
-  author: string;
-  authorEmail?: string;
-  title: string;
-  links?: string[];
-  category?: string;
-  content?: string;
-}
-
-export default async function Posts({
-  id,
-  author,
-  authorEmail,
-  datepublished,
-  thumbnail,
-  title,
-  links,
-  category,
-  content,
-}: PostProps) {
+export default async function PostDetail({ post }: { post: IPost }) {
   const session = await getServerSession(authOptions);
 
-  const isEditable = session && session?.user?.email === authorEmail;
-
-  // truncate the content, limited to only 600 characters
-  const truncatedContent = content && content.slice(0, 600);
-
-  // truncate the content, limited to only 1 paragraph or before the new line
-  // const truncatedContent = content?.split("\n")[0];
+  const isEditable = session && session?.user?.email === post.authorEmail;
 
   return (
     <div className="my-4 border-b border-b-slate-400 py-6">
       <div className="mb-4">
-        {author ? (
-          <>
-            Posted by: <span className="font-bold">{author}</span> on{" "}
-            {formattedDate(datepublished)}
-          </>
+        {isEditable ? (
+          <>Posted on {formattedDate(post.createdAt)}</>
         ) : (
-          <>Posted on {formattedDate(datepublished)}</>
+          <>
+            Posted by: <span className="font-bold">{""}</span> on{" "}
+            {formattedDate(post.createdAt)}
+          </>
         )}
       </div>
 
       <div className="relative h-72 w-full">
-        {thumbnail ? (
+        {post.imageUrl ? (
           <Image
-            src={thumbnail}
-            alt={title}
+            src={post.imageUrl}
+            alt={post.title}
             fill
             sizes="100vw"
             priority
@@ -65,7 +37,7 @@ export default async function Posts({
         ) : (
           <Image
             src={"/thumbnail-placeholder.png"}
-            alt={title}
+            alt={post.title}
             fill
             priority
             className="rounded-md object-cover object-center"
@@ -73,36 +45,25 @@ export default async function Posts({
         )}
       </div>
 
-      {category && (
+      {post.catName && (
         <Link
           className="mt-4 block w-fit rounded-md bg-slate-800 px-4 py-0.5 text-sm font-bold text-white"
-          href={`categories/${category}`}
+          href={`/categories/${post.catName}`}
         >
-          {category}
+          {post.catName}
         </Link>
       )}
-
-      <Link href={`/detail-post/${id}`}>
-        <h2>{title}</h2>
-      </Link>
-
-      {/* <div className="content">
-        {content
-              ?.split("\n")
-              .map((paragraph, index) => <p key={index}>{paragraph}</p>)}
-      </div> */}
+      <h2>{post.title}</h2>
 
       <div className="content">
-        <p>
-          {truncatedContent && truncatedContent.length < content.length
-            ? truncatedContent + "..."
-            : content}
-        </p>
+        {post.content
+          ?.split("\n")
+          .map((paragraph, index) => <p key={index}>{paragraph}</p>)}
       </div>
 
-      {links && (
+      {post.links && (
         <div className="my-4 flex flex-col gap-3">
-          {links.map((link, i) => (
+          {post.links.map((link, i) => (
             <div key={i} className="flex items-center gap-2">
               {/* link icon */}
               <svg
@@ -127,11 +88,10 @@ export default async function Posts({
           ))}
         </div>
       )}
-
       {isEditable && (
         <div className="flex w-fit gap-10 rounded-md bg-slate-200 px-4 py-2 font-bold">
-          <Link href={`/edit-post/${id}`}>Edit</Link>
-          <DeleteButton id={id} />
+          <Link href={`/edit-post/${post.id}`}>Edit</Link>
+          <DeleteButton id={post.id} />
         </div>
       )}
     </div>

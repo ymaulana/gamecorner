@@ -9,7 +9,10 @@ export async function GET(
 ) {
   try {
     const id = params.id;
-    const post = await prisma.post.findUnique({ where: { id } });
+    const post = await prisma.post.findUnique({
+      where: { id },
+      include: { author: { select: { name: true } } },
+    });
 
     return NextResponse.json(post);
   } catch (error) {
