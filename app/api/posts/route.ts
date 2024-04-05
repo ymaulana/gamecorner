@@ -1,6 +1,6 @@
 import prisma from "@/lib/prismadb";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import authOptions from "../auth/[...nextauth]/authOptions";
 
 export async function POST(req: Request) {
@@ -42,13 +42,28 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const query = searchParams.get("query");
+
+  let whereCondition = {};
+  // If query parameter is not empty, construct the where condition
+  if (query) {
+    whereCondition = {
+      title: {
+        contains: String(query),
+        mode: "insensitive",
+      },
+    };
+  }
+
   try {
     const posts = await prisma.post.findMany({
       include: { author: { select: { name: true } } },
       orderBy: {
         createdAt: "desc",
       },
+      where: whereCondition,
     });
 
     return NextResponse.json(posts);
