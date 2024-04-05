@@ -2,7 +2,7 @@
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import SearchPost from "./SearchPost";
 
 export default function Navbar() {
@@ -114,7 +114,9 @@ export default function Navbar() {
           </div>
         )}
       </div>
-      <SearchPost />
+      <Suspense>
+        <SearchPost />
+      </Suspense>
     </div>
   );
 }
