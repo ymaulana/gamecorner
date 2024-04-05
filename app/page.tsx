@@ -2,11 +2,19 @@ import CategoriesList from "./components/CategoriesList";
 import Posts from "./components/Posts";
 import { IPost } from "./types";
 
-const getPosts = async (): Promise<IPost[] | null> => {
+const getPosts = async (query?: string): Promise<IPost[] | null> => {
   try {
-    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/posts`, {
+    let url = `${process.env.NEXTAUTH_URL}/api/posts`;
+
+    // If a query is provided, append it to the URL
+    if (query) {
+      url += `?query=${encodeURIComponent(query)}`;
+    }
+
+    const res = await fetch(url, {
       cache: "no-store",
     });
+
     if (res.ok) {
       const posts = await res.json();
       return posts;
@@ -18,8 +26,16 @@ const getPosts = async (): Promise<IPost[] | null> => {
   return null;
 };
 
-export default async function Home() {
-  const posts = await getPosts();
+export default async function Home({
+  searchParams,
+}: {
+  searchParams?: {
+    query?: string;
+    page?: string;
+  };
+}) {
+  const query = searchParams?.query || "";
+  const posts = await getPosts(query);
   return (
     <>
       <CategoriesList />

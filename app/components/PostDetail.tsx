@@ -18,7 +18,7 @@ export default async function PostDetail({ post }: { post: IPost }) {
           <>Posted on {formattedDate(post.createdAt)}</>
         ) : (
           <>
-            Posted by: <span className="font-bold">{""}</span> on{" "}
+            Posted by: <span className="font-bold">{post.author.name}</span> on{" "}
             {formattedDate(post.createdAt)}
           </>
         )}
